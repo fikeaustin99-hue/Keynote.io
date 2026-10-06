@@ -1,127 +1,730 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Keynote.io Live Preview</title>
+    <meta name="description" content="Keynote.io - Play piano. Claim land. A rhythmic music game where you build your territory through skill." />
+    <meta name="theme-color" content="#0B2545" />
+    <title>Keynote.io - Music Gaming Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&display=swap" rel="stylesheet">
     <style>
-      :root {
-        --bg: #0f172a;
-        --panel: #111827;
-        --text: #e5e7eb;
-        --muted: #94a3b8;
-        --accent: #60a5fa;
-      }
+        :root {
+            --sea: #0B2545;
+            --shallow: #13406B;
+            --land: #F2C14E;
+            --land-d: #B58A1F;
+            --key: #F4F7FA;
+            --ink: #0B2545;
+            --text: #EAF1F8;
+            --mute: #9DB4CC;
+            --dark-bg: #020817;
+        }
 
-      * { box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-      body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(180deg, #020817 0%, var(--bg) 100%);
-        color: var(--text);
-      }
+        html {
+            scroll-behavior: smooth;
+        }
 
-      .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 16px 24px;
-        background: rgba(17, 24, 39, 0.9);
-        border-bottom: 1px solid rgba(148, 163, 184, 0.2);
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        backdrop-filter: blur(8px);
-      }
+        body {
+            font-family: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif;
+            background: linear-gradient(180deg, var(--dark-bg) 0%, var(--sea) 100%);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-      .title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-      }
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: rgba(11, 37, 69, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(242, 193, 78, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
 
-      .badge {
-        padding: 6px 10px;
-        border-radius: 999px;
-        background: rgba(96, 165, 250, 0.12);
-        border: 1px solid rgba(96, 165, 250, 0.38);
-        color: var(--accent);
-        font-size: 0.8rem;
-      }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 20px;
+        }
 
-      .frame-wrap {
-        padding: 20px;
-        height: calc(100vh - 72px);
-      }
+        .nav-brand span {
+            color: var(--land);
+        }
 
-      iframe {
-        width: 100%;
-        height: 100%;
-        border: 1px solid rgba(148, 163, 184, 0.25);
-        border-radius: 14px;
-        background: white;
-        box-shadow: 0 20px 60px rgba(15, 23, 42, 0.45);
-      }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--land);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--land);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 2px solid var(--land);
+            background: transparent;
+            color: var(--land);
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            background: var(--land);
+            color: var(--ink);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(242, 193, 78, 0.3);
+        }
+
+        .btn-primary {
+            background: var(--land);
+            color: var(--ink);
+            border-color: var(--land);
+        }
+
+        .btn-primary:hover {
+            background: var(--land-d);
+            border-color: var(--land-d);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 64px;
+            padding: 120px 40px;
+            text-align: center;
+            min-height: calc(100vh - 64px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(242, 193, 78, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            50% { transform: translateY(30px) translateX(20px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 10vw, 92px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 span {
+            color: var(--land);
+            display: block;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--mute);
+            margin-bottom: 40px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 40px;
+            background: rgba(19, 64, 107, 0.3);
+            border-top: 1px solid rgba(242, 193, 78, 0.1);
+            border-bottom: 1px solid rgba(242, 193, 78, 0.1);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 44px;
+            font-weight: 800;
+            margin-bottom: 60px;
+            color: var(--text);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: rgba(11, 37, 69, 0.6);
+            border: 1px solid rgba(242, 193, 78, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card:hover {
+            border-color: var(--land);
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(242, 193, 78, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--land);
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: var(--mute);
+            line-height: 1.8;
+        }
+
+        /* Game Preview Section */
+        .game-preview {
+            padding: 100px 40px;
+            background: linear-gradient(135deg, rgba(19, 64, 107, 0.5) 0%, rgba(11, 37, 69, 0.5) 100%);
+        }
+
+        .preview-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .preview-content h2 {
+            font-size: 44px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .preview-content h2 span {
+            color: var(--land);
+        }
+
+        .preview-content p {
+            font-size: 16px;
+            color: var(--mute);
+            margin-bottom: 24px;
+            line-height: 1.8;
+        }
+
+        .preview-features {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .preview-feature {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .preview-feature::before {
+            content: '→';
+            color: var(--land);
+            font-weight: 800;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .preview-feature p {
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .preview-frame {
+            background: rgba(11, 37, 69, 0.8);
+            border: 2px solid rgba(242, 193, 78, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            backdrop-filter: blur(10px);
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .preview-frame.loading {
+            color: var(--mute);
+        }
+
+        .preview-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 10px;
+            background: white;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 80px 40px;
+            background: rgba(19, 64, 107, 0.3);
+            border-top: 1px solid rgba(242, 193, 78, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-item h4 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--land);
+            margin-bottom: 8px;
+        }
+
+        .stat-item p {
+            font-size: 14px;
+            color: var(--mute);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 40px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(242, 193, 78, 0.1) 0%, transparent 100%);
+            border-top: 1px solid rgba(242, 193, 78, 0.2);
+        }
+
+        .cta-section h2 {
+            font-size: 44px;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            color: var(--mute);
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px;
+            background: rgba(11, 37, 69, 0.8);
+            border-top: 1px solid rgba(242, 193, 78, 0.1);
+            text-align: center;
+            color: var(--mute);
+            font-size: 14px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--land);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+                font-size: 12px;
+            }
+
+            .hero {
+                padding: 80px 20px;
+                margin-top: 64px;
+            }
+
+            .hero h1 {
+                font-size: clamp(36px, 8vw, 60px);
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .features {
+                padding: 60px 20px;
+            }
+
+            .section-title {
+                font-size: 32px;
+                margin-bottom: 40px;
+            }
+
+            .features-grid {
+                gap: 20px;
+            }
+
+            .feature-card {
+                padding: 24px;
+            }
+
+            .preview-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .preview-frame {
+                height: 400px;
+            }
+
+            .cta-section h2 {
+                font-size: 32px;
+            }
+
+            .stats-grid {
+                gap: 30px;
+            }
+
+            .stat-item h4 {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                padding: 0 16px;
+                height: 56px;
+            }
+
+            .nav-brand {
+                font-size: 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 60px 16px;
+            }
+
+            .hero h1 {
+                font-size: clamp(28px, 6vw, 44px);
+            }
+
+            .features {
+                padding: 40px 16px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .btn {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div class="topbar">
-      <div class="title">Keynote.io Live Preview</div>
-      <div class="badge">GitHub Pages</div>
-    </div>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="nav-brand">keynote<span>.io</span></a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#game">Play</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+        <div class="nav-cta">
+            <a href="#play" class="btn btn-primary">Play Now</a>
+        </div>
+    </nav>
 
-    <div class="frame-wrap" id="container">
-      <!-- Content will be injected here -->
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>keynote<span>.io</span></h1>
+            <p>Play piano. Claim land.</p>
+            <p style="font-size: 16px; color: var(--mute); margin: 24px 0 40px;">
+                A rhythmic music game where your musical skills determine the fate of your territory. Hit the notes. Build your empire.
+            </p>
+            <div class="hero-cta">
+                <a href="#play" class="btn btn-primary">Start Playing</a>
+                <a href="https://github.com/fikeaustin99-hue/Keynote.io" class="btn">View on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <h2 class="section-title">Why Play Keynote.io?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎹</div>
+                <h3>Music Gaming</h3>
+                <p>Experience rhythm gameplay that syncs perfectly with your musical skills. Press keys in time with the beat.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏝️</div>
+                <h3>Land Building</h3>
+                <p>Unlock and expand your territory as you progress through levels. Your success in music determines your empire's size.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Progressive Difficulty</h3>
+                <p>Start as an Islet and work your way up through increasingly challenging musical pieces and territories.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎵</div>
+                <h3>Multiple Instruments</h3>
+                <p>Switch between different instruments and sound packs to customize your gameplay experience.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3>Scoring System</h3>
+                <p>Earn points based on accuracy and streak. Build multipliers and compete for the highest scores.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Instant Access</h3>
+                <p>Play as a guest or create an account. No downloads needed—play directly in your browser.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Preview Section -->
+    <section id="game" class="game-preview">
+        <div class="preview-container">
+            <div class="preview-content">
+                <h2>How to <span>Play</span></h2>
+                <p>Keynote.io combines music and strategy into one addictive experience. Here's how it works:</p>
+                <div class="preview-features">
+                    <div class="preview-feature">
+                        <p><strong>Choose Your Land:</strong> Enter your name and pick your starting territory.</p>
+                    </div>
+                    <div class="preview-feature">
+                        <p><strong>Select Your Song:</strong> Pick from various musical tracks and instruments.</p>
+                    </div>
+                    <div class="preview-feature">
+                        <p><strong>Play Rhythm:</strong> Press Q, W, E, or R as notes reach the white line.</p>
+                    </div>
+                    <div class="preview-feature">
+                        <p><strong>Build Your Streak:</strong> Hit 4 notes to unlock additional tracks, 10 for the full mix, 20+ for ultimate power.</p>
+                    </div>
+                    <div class="preview-feature">
+                        <p><strong>Expand Territory:</strong> Each successful song expands your land and increases your rank.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="preview-frame loading" id="preview">
+                Loading preview...
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section id="about" class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h4>∞</h4>
+                <p>Endless Gameplay</p>
+            </div>
+            <div class="stat-item">
+                <h4>Free</h4>
+                <p>Always Free to Play</p>
+            </div>
+            <div class="stat-item">
+                <h4>100%</h4>
+                <p>Browser-Based</p>
+            </div>
+            <div class="stat-item">
+                <h4>∞</h4>
+                <p>Levels to Unlock</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="play" class="cta-section">
+        <h2>Ready to Claim Your Land?</h2>
+        <p>Start your musical journey now. No registration required to play as a guest.</p>
+        <div class="hero-cta" style="justify-content: center;">
+            <button class="btn btn-primary" onclick="scrollToGame()">Launch Game</button>
+            <a href="https://github.com/fikeaustin99-hue/Keynote.io" class="btn">GitHub Repo</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="https://github.com/fikeaustin99-hue/Keynote.io">GitHub</a>
+            <a href="https://github.com/fikeaustin99-hue">Developer</a>
+            <a href="mailto:fikeaustin99@gmail.com">Contact</a>
+        </div>
+        <p>&copy; 2024 Keynote.io. All rights reserved. Made with 🎹 by Austin Fike.</p>
+    </footer>
+
+    <!-- Embedded Game (Hidden until user interaction) -->
+    <div id="game-modal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); z-index: 2000; overflow: auto;">
+        <div style="position: absolute; top: 20px; right: 20px; z-index: 2001;">
+            <button onclick="closeGame()" class="btn btn-primary">Close</button>
+        </div>
+        <div style="width: 100%; height: 100vh; min-height: 100vh;">
+            <iframe id="game-iframe" src="keynote.io.html" style="width: 100%; height: 100%; border: none; background: white;"></iframe>
+        </div>
     </div>
 
     <script>
-      // Fetch and inject the keynote.io.html content directly
-      fetch('keynote.io.html')
-        .then(response => response.text())
-        .then(html => {
-          // Parse the HTML to extract just the content (skip the outer html/head/body tags)
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          
-          // Get the container
-          const container = document.getElementById('container');
-          
-          // Move the main content into the container
-          if (doc.querySelector('main')) {
-            container.innerHTML = '';
-            container.style.padding = '0';
-            container.style.height = '100%';
-            container.appendChild(doc.querySelector('main'));
-          }
-          
-          // Inject styles from the original document
-          const styleTag = document.createElement('style');
-          const allStyles = Array.from(doc.querySelectorAll('style'))
-            .map(s => s.textContent)
-            .join('\n');
-          styleTag.textContent = allStyles;
-          document.head.appendChild(styleTag);
-          
-          // Inject scripts
-          const scripts = doc.querySelectorAll('script');
-          scripts.forEach(script => {
-            const newScript = document.createElement('script');
-            newScript.type = script.type;
-            newScript.textContent = script.textContent;
-            if (script.src) newScript.src = script.src;
-            document.body.appendChild(newScript);
-          });
-        })
-        .catch(err => {
-          document.getElementById('container').innerHTML = `
-            <div style="padding: 2rem; text-align: center; color: #ef4444;">
-              <h2>Unable to load Keynote.io</h2>
-              <p>${err.message}</p>
-            </div>
-          `;
+        // Load game preview in background
+        setTimeout(() => {
+            const previewEl = document.getElementById('preview');
+            const iframe = document.createElement('iframe');
+            iframe.src = 'keynote.io.html';
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.style.borderRadius = '10px';
+            iframe.style.background = 'white';
+            previewEl.innerHTML = '';
+            previewEl.appendChild(iframe);
+        }, 500);
+
+        // Game modal functions
+        function scrollToGame() {
+            document.getElementById('game-modal').style.display = 'flex';
+            document.getElementById('game-modal').style.flexDirection = 'column';
+            document.getElementById('game-modal').style.justifyContent = 'center';
+            document.getElementById('game-modal').style.alignItems = 'center';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeGame() {
+            document.getElementById('game-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeGame();
+            }
+        });
+
+        // Smooth scroll enhancement
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#play') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
         });
     </script>
-  </body>
+</body>
 </html>
