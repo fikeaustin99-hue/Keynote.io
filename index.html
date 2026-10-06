@@ -19,6 +19,8 @@
             --text: #EAF1F8;
             --mute: #9DB4CC;
             --dark-bg: #020817;
+            --accent-pink: #FFD3E1;
+            --accent-red: #FF7B7B;
         }
 
         * {
@@ -39,6 +41,96 @@
             overflow-x: hidden;
         }
 
+        /* Animated Background Grid */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(0deg, transparent 24%, rgba(242, 193, 78, 0.05) 25%, rgba(242, 193, 78, 0.05) 26%, transparent 27%, transparent 74%, rgba(242, 193, 78, 0.05) 75%, rgba(242, 193, 78, 0.05) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(242, 193, 78, 0.05) 25%, rgba(242, 193, 78, 0.05) 26%, transparent 27%, transparent 74%, rgba(242, 193, 78, 0.05) 75%, rgba(242, 193, 78, 0.05) 76%, transparent 77%, transparent);
+            background-size: 80px 80px;
+            background-position: 0 0;
+            z-index: 1;
+            pointer-events: none;
+            animation: gridShift 20s linear infinite;
+        }
+
+        @keyframes gridShift {
+            0% { background-position: 0 0; }
+            100% { background-position: 80px 80px; }
+        }
+
+        /* Floating Orbs Background */
+        .bg-orbs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.6;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(242, 193, 78, 0.3) 0%, transparent 70%);
+            top: -50px;
+            right: 10%;
+            animation: float1 15s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 123, 123, 0.2) 0%, transparent 70%);
+            bottom: 10%;
+            left: 5%;
+            animation: float2 20s ease-in-out infinite;
+        }
+
+        .orb-3 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(96, 165, 250, 0.15) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: float3 25s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, 40px); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(-50%, -50%); }
+            50% { transform: translate(-30%, -40%); }
+        }
+
+        /* Content wrapper */
+        .content {
+            position: relative;
+            z-index: 2;
+        }
+
         /* Navigation */
         nav {
             position: fixed;
@@ -46,15 +138,15 @@
             left: 0;
             right: 0;
             height: 64px;
-            background: rgba(11, 37, 69, 0.95);
+            background: rgba(11, 37, 69, 0.92);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(242, 193, 78, 0.15);
+            border-bottom: 1px solid rgba(242, 193, 78, 0.2);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 40px;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
         }
 
         .nav-brand {
@@ -64,6 +156,7 @@
             text-decoration: none;
             font-weight: 800;
             font-size: 20px;
+            letter-spacing: -0.02em;
         }
 
         .nav-brand span {
@@ -81,7 +174,7 @@
             text-decoration: none;
             font-weight: 500;
             font-size: 14px;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
             position: relative;
         }
 
@@ -122,13 +215,15 @@
             text-decoration: none;
             font-size: 14px;
             font-family: inherit;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .btn:hover {
             background: var(--land);
             color: var(--ink);
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(242, 193, 78, 0.3);
+            box-shadow: 0 8px 20px rgba(242, 193, 78, 0.4);
         }
 
         .btn-primary {
@@ -140,132 +235,266 @@
         .btn-primary:hover {
             background: var(--land-d);
             border-color: var(--land-d);
+            box-shadow: 0 12px 30px rgba(242, 193, 78, 0.5);
         }
 
-        /* Hero Section */
-        .hero {
+        .btn-secondary {
+            border-color: var(--accent-pink);
+            color: var(--accent-pink);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-pink);
+            color: var(--ink);
+        }
+
+        /* Hero / Press Play Section */
+        .press-play {
             margin-top: 64px;
-            padding: 120px 40px;
-            text-align: center;
-            min-height: calc(100vh - 64px);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            padding: 40px;
+            text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .hero::before {
+        .press-play::before {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(242, 193, 78, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: float 20s ease-in-out infinite;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(242, 193, 78, 0.05) 0%, transparent 70%);
+            z-index: -1;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) translateX(0px); }
-            50% { transform: translateY(30px) translateX(20px); }
+        .press-play-content {
+            max-width: 900px;
+            animation: slideInUp 1s ease-out;
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .hero h1 {
-            font-size: clamp(48px, 10vw, 92px);
+        .game-logo {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .press-play h1 {
+            font-size: clamp(48px, 12vw, 100px);
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 20px;
             letter-spacing: -0.02em;
+            text-shadow: 0 10px 30px rgba(242, 193, 78, 0.2);
         }
 
-        .hero h1 span {
-            color: var(--land);
-            display: block;
+        .press-play h1 span {
+            background: linear-gradient(135deg, var(--land) 0%, var(--accent-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .hero p {
-            font-size: 20px;
+        .tagline {
+            font-size: 24px;
             color: var(--mute);
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+            font-weight: 500;
         }
 
-        .hero-cta {
+        .game-description {
+            font-size: 16px;
+            color: var(--mute);
+            margin-bottom: 50px;
+            line-height: 1.8;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .storefront-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .storefront-card {
+            background: rgba(19, 64, 107, 0.6);
+            border: 2px solid rgba(242, 193, 78, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .storefront-card:hover {
+            border-color: var(--land);
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(242, 193, 78, 0.2);
+        }
+
+        .storefront-card-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .storefront-card h3 {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--land);
+            margin-bottom: 5px;
+        }
+
+        .storefront-card p {
+            font-size: 12px;
+            color: var(--mute);
+        }
+
+        .cta-buttons {
             display: flex;
-            gap: 16px;
+            gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
         }
 
+        .btn-play {
+            padding: 16px 48px;
+            font-size: 18px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(242, 193, 78, 0.3);
+        }
+
+        .btn-play:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(242, 193, 78, 0.5);
+        }
+
         /* Features Section */
         .features {
-            padding: 100px 40px;
-            background: rgba(19, 64, 107, 0.3);
-            border-top: 1px solid rgba(242, 193, 78, 0.1);
-            border-bottom: 1px solid rgba(242, 193, 78, 0.1);
+            padding: 120px 40px;
+            background: linear-gradient(180deg, rgba(19, 64, 107, 0.4) 0%, rgba(11, 37, 69, 0.4) 100%);
+            border-top: 1px solid rgba(242, 193, 78, 0.15);
+            border-bottom: 1px solid rgba(242, 193, 78, 0.15);
+            position: relative;
         }
 
         .section-title {
             text-align: center;
-            font-size: 44px;
+            font-size: 48px;
             font-weight: 800;
-            margin-bottom: 60px;
+            margin-bottom: 20px;
             color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 16px;
+            color: var(--mute);
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 32px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .feature-card {
-            background: rgba(11, 37, 69, 0.6);
-            border: 1px solid rgba(242, 193, 78, 0.2);
+            background: rgba(11, 37, 69, 0.7);
+            border: 2px solid rgba(242, 193, 78, 0.15);
             border-radius: 16px;
-            padding: 32px;
+            padding: 40px;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--land) 0%, var(--accent-pink) 100%);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
         }
 
         .feature-card:hover {
             border-color: var(--land);
-            transform: translateY(-8px);
-            box-shadow: 0 16px 40px rgba(242, 193, 78, 0.15);
+            transform: translateY(-12px);
+            box-shadow: 0 20px 50px rgba(242, 193, 78, 0.2);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
         }
 
         .feature-icon {
-            font-size: 40px;
-            margin-bottom: 16px;
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .feature-card h3 {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
             margin-bottom: 12px;
             color: var(--land);
         }
 
         .feature-card p {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--mute);
             line-height: 1.8;
         }
 
         /* Game Preview Section */
         .game-preview {
-            padding: 100px 40px;
+            padding: 120px 40px;
             background: linear-gradient(135deg, rgba(19, 64, 107, 0.5) 0%, rgba(11, 37, 69, 0.5) 100%);
+            position: relative;
         }
 
         .preview-container {
@@ -278,14 +507,18 @@
         }
 
         .preview-content h2 {
-            font-size: 44px;
+            font-size: 48px;
             font-weight: 800;
             margin-bottom: 24px;
             line-height: 1.2;
+            letter-spacing: -0.02em;
         }
 
         .preview-content h2 span {
-            color: var(--land);
+            background: linear-gradient(135deg, var(--land) 0%, var(--accent-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .preview-content p {
@@ -303,16 +536,24 @@
 
         .preview-feature {
             display: flex;
-            gap: 12px;
+            gap: 16px;
             align-items: flex-start;
+            padding: 12px;
+            background: rgba(242, 193, 78, 0.05);
+            border-left: 3px solid var(--land);
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
 
-        .preview-feature::before {
-            content: '→';
-            color: var(--land);
-            font-weight: 800;
-            font-size: 18px;
+        .preview-feature:hover {
+            background: rgba(242, 193, 78, 0.1);
+            transform: translateX(8px);
+        }
+
+        .preview-feature-icon {
+            font-size: 24px;
             flex-shrink: 0;
+            color: var(--land);
         }
 
         .preview-feature p {
@@ -322,8 +563,8 @@
 
         .preview-frame {
             background: rgba(11, 37, 69, 0.8);
-            border: 2px solid rgba(242, 193, 78, 0.3);
-            border-radius: 16px;
+            border: 3px solid rgba(242, 193, 78, 0.4);
+            border-radius: 20px;
             padding: 16px;
             backdrop-filter: blur(10px);
             height: 500px;
@@ -331,6 +572,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            box-shadow: 0 20px 60px rgba(242, 193, 78, 0.15);
         }
 
         .preview-frame.loading {
@@ -341,66 +583,57 @@
             width: 100%;
             height: 100%;
             border: none;
-            border-radius: 10px;
+            border-radius: 16px;
             background: white;
         }
 
         /* Stats Section */
         .stats {
-            padding: 80px 40px;
+            padding: 100px 40px;
             background: rgba(19, 64, 107, 0.3);
-            border-top: 1px solid rgba(242, 193, 78, 0.1);
+            border-top: 1px solid rgba(242, 193, 78, 0.15);
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 40px;
             max-width: 1000px;
             margin: 0 auto;
             text-align: center;
         }
 
+        .stat-item {
+            padding: 30px;
+            background: rgba(11, 37, 69, 0.6);
+            border: 2px solid rgba(242, 193, 78, 0.2);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            border-color: var(--land);
+            transform: scale(1.05);
+        }
+
         .stat-item h4 {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 800;
             color: var(--land);
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .stat-item p {
             font-size: 14px;
             color: var(--mute);
-        }
-
-        /* CTA Section */
-        .cta-section {
-            padding: 80px 40px;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(242, 193, 78, 0.1) 0%, transparent 100%);
-            border-top: 1px solid rgba(242, 193, 78, 0.2);
-        }
-
-        .cta-section h2 {
-            font-size: 44px;
-            font-weight: 800;
-            margin-bottom: 24px;
-        }
-
-        .cta-section p {
-            font-size: 18px;
-            color: var(--mute);
-            margin-bottom: 32px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            font-weight: 500;
         }
 
         /* Footer */
         footer {
-            padding: 40px;
-            background: rgba(11, 37, 69, 0.8);
-            border-top: 1px solid rgba(242, 193, 78, 0.1);
+            padding: 60px 40px;
+            background: rgba(11, 37, 69, 0.9);
+            border-top: 1px solid rgba(242, 193, 78, 0.15);
             text-align: center;
             color: var(--mute);
             font-size: 14px;
@@ -418,10 +651,41 @@
             color: var(--text);
             text-decoration: none;
             transition: color 0.3s ease;
+            font-weight: 500;
         }
 
         .footer-links a:hover {
             color: var(--land);
+        }
+
+        /* Game Modal */
+        #game-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 2000;
+            overflow: auto;
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2001;
+        }
+
+        .game-container {
+            width: 100%;
+            height: 100vh;
+            min-height: 100vh;
+        }
+
+        .game-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
         }
 
         /* Responsive */
@@ -431,34 +695,41 @@
             }
 
             .nav-links {
-                gap: 20px;
+                gap: 16px;
                 font-size: 12px;
             }
 
-            .hero {
-                padding: 80px 20px;
-                margin-top: 64px;
+            .press-play {
+                padding: 40px 20px;
             }
 
-            .hero h1 {
+            .press-play h1 {
                 font-size: clamp(36px, 8vw, 60px);
             }
 
-            .hero p {
-                font-size: 16px;
+            .tagline {
+                font-size: 18px;
             }
 
-            .hero-cta {
+            .storefront-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .cta-buttons {
                 flex-direction: column;
             }
 
+            .btn-play {
+                width: 100%;
+            }
+
             .features {
-                padding: 60px 20px;
+                padding: 80px 20px;
             }
 
             .section-title {
-                font-size: 32px;
-                margin-bottom: 40px;
+                font-size: 36px;
             }
 
             .features-grid {
@@ -478,16 +749,8 @@
                 height: 400px;
             }
 
-            .cta-section h2 {
-                font-size: 32px;
-            }
-
             .stats-grid {
-                gap: 30px;
-            }
-
-            .stat-item h4 {
-                font-size: 28px;
+                gap: 20px;
             }
         }
 
@@ -505,174 +768,233 @@
                 display: none;
             }
 
-            .hero {
-                padding: 60px 16px;
+            .press-play {
+                padding: 40px 16px;
+                margin-top: 56px;
             }
 
-            .hero h1 {
+            .game-logo {
+                font-size: 60px;
+            }
+
+            .press-play h1 {
                 font-size: clamp(28px, 6vw, 44px);
             }
 
+            .tagline {
+                font-size: 16px;
+            }
+
+            .game-description {
+                font-size: 14px;
+            }
+
             .features {
-                padding: 40px 16px;
+                padding: 60px 16px;
             }
 
             .section-title {
-                font-size: 24px;
+                font-size: 28px;
             }
 
             .btn {
                 padding: 10px 16px;
                 font-size: 12px;
             }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <a href="#" class="nav-brand">keynote<span>.io</span></a>
-        <ul class="nav-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#game">Play</a></li>
-            <li><a href="#about">About</a></li>
-        </ul>
-        <div class="nav-cta">
-            <a href="#play" class="btn btn-primary">Play Now</a>
-        </div>
-    </nav>
+    <!-- Animated Background -->
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <div class="bg-grid"></div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>keynote<span>.io</span></h1>
-            <p>Play piano. Claim land.</p>
-            <p style="font-size: 16px; color: var(--mute); margin: 24px 0 40px;">
-                A rhythmic music game where your musical skills determine the fate of your territory. Hit the notes. Build your empire.
-            </p>
-            <div class="hero-cta">
-                <a href="#play" class="btn btn-primary">Start Playing</a>
-                <a href="https://github.com/fikeaustin99-hue/Keynote.io" class="btn">View on GitHub</a>
+    <!-- Content -->
+    <div class="content">
+        <!-- Navigation -->
+        <nav>
+            <a href="#" class="nav-brand">keynote<span>.io</span></a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#game">Gameplay</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="nav-cta">
+                <a href="#play" class="btn btn-primary">Play Now</a>
             </div>
-        </div>
-    </section>
+        </nav>
 
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <h2 class="section-title">Why Play Keynote.io?</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🎹</div>
-                <h3>Music Gaming</h3>
-                <p>Experience rhythm gameplay that syncs perfectly with your musical skills. Press keys in time with the beat.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🏝️</div>
-                <h3>Land Building</h3>
-                <p>Unlock and expand your territory as you progress through levels. Your success in music determines your empire's size.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📈</div>
-                <h3>Progressive Difficulty</h3>
-                <p>Start as an Islet and work your way up through increasingly challenging musical pieces and territories.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🎵</div>
-                <h3>Multiple Instruments</h3>
-                <p>Switch between different instruments and sound packs to customize your gameplay experience.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🏆</div>
-                <h3>Scoring System</h3>
-                <p>Earn points based on accuracy and streak. Build multipliers and compete for the highest scores.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>Instant Access</h3>
-                <p>Play as a guest or create an account. No downloads needed—play directly in your browser.</p>
-            </div>
-        </div>
-    </section>
+        <!-- Press Play Landing Screen -->
+        <section class="press-play">
+            <div class="press-play-content">
+                <div class="game-logo">🎹</div>
+                <h1>keynote<span>.io</span></h1>
+                <p class="tagline">Play Piano. Claim Land.</p>
+                <p class="game-description">
+                    A rhythmic music game where your musical skills determine the fate of your territory. 
+                    Hit the notes. Build your empire. Explore the ultimate fusion of music and strategy.
+                </p>
 
-    <!-- Game Preview Section -->
-    <section id="game" class="game-preview">
-        <div class="preview-container">
-            <div class="preview-content">
-                <h2>How to <span>Play</span></h2>
-                <p>Keynote.io combines music and strategy into one addictive experience. Here's how it works:</p>
-                <div class="preview-features">
-                    <div class="preview-feature">
-                        <p><strong>Choose Your Land:</strong> Enter your name and pick your starting territory.</p>
+                <div class="storefront-grid">
+                    <div class="storefront-card">
+                        <div class="storefront-card-icon">🎵</div>
+                        <h3>Multiple Tracks</h3>
+                        <p>Diverse songs to play</p>
                     </div>
-                    <div class="preview-feature">
-                        <p><strong>Select Your Song:</strong> Pick from various musical tracks and instruments.</p>
+                    <div class="storefront-card">
+                        <div class="storefront-card-icon">🏝️</div>
+                        <h3>Territories</h3>
+                        <p>Build your realm</p>
                     </div>
-                    <div class="preview-feature">
-                        <p><strong>Play Rhythm:</strong> Press Q, W, E, or R as notes reach the white line.</p>
-                    </div>
-                    <div class="preview-feature">
-                        <p><strong>Build Your Streak:</strong> Hit 4 notes to unlock additional tracks, 10 for the full mix, 20+ for ultimate power.</p>
-                    </div>
-                    <div class="preview-feature">
-                        <p><strong>Expand Territory:</strong> Each successful song expands your land and increases your rank.</p>
+                    <div class="storefront-card">
+                        <div class="storefront-card-icon">🏆</div>
+                        <h3>Leaderboards</h3>
+                        <p>Compete for glory</p>
                     </div>
                 </div>
-            </div>
-            <div class="preview-frame loading" id="preview">
-                Loading preview...
-            </div>
-        </div>
-    </section>
 
-    <!-- Stats Section -->
-    <section id="about" class="stats">
-        <div class="stats-grid">
-            <div class="stat-item">
-                <h4>∞</h4>
-                <p>Endless Gameplay</p>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary btn-play" onclick="launchGame()">▶ Play Now</button>
+                    <a href="https://github.com/fikeaustin99-hue/Keynote.io" class="btn btn-play">View GitHub</a>
+                </div>
             </div>
-            <div class="stat-item">
-                <h4>Free</h4>
-                <p>Always Free to Play</p>
-            </div>
-            <div class="stat-item">
-                <h4>100%</h4>
-                <p>Browser-Based</p>
-            </div>
-            <div class="stat-item">
-                <h4>∞</h4>
-                <p>Levels to Unlock</p>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- CTA Section -->
-    <section id="play" class="cta-section">
-        <h2>Ready to Claim Your Land?</h2>
-        <p>Start your musical journey now. No registration required to play as a guest.</p>
-        <div class="hero-cta" style="justify-content: center;">
-            <button class="btn btn-primary" onclick="scrollToGame()">Launch Game</button>
-            <a href="https://github.com/fikeaustin99-hue/Keynote.io" class="btn">GitHub Repo</a>
-        </div>
-    </section>
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <h2 class="section-title">Why Play?</h2>
+            <p class="section-subtitle">Experience a unique blend of rhythm gaming and territory conquest</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎹</div>
+                    <h3>Music Gameplay</h3>
+                    <p>Precision rhythm mechanics that sync perfectly with dynamic soundtrack variations. Press keys in perfect timing to master each track.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏝️</div>
+                    <h3>Territory Building</h3>
+                    <p>Every successful performance expands your realm. Evolve from a tiny Islet to a mighty Continent through musical mastery.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>Progressive Challenge</h3>
+                    <p>20+ levels of increasing difficulty. Unlock new instruments, songs, and gameplay modifiers as you advance through the game.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎵</div>
+                    <h3>Instrument Selection</h3>
+                    <p>Switch between piano, strings, winds, and percussion. Each instrument type offers unique gameplay challenges and sounds.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Streak System</h3>
+                    <p>Build multipliers and unlock bonus features. Hit 4+ notes to add bass, 10+ for orchestral depth, and 20+ for the full mix.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Zero Friction</h3>
+                    <p>Play instantly as a guest or create an account. No downloads required—play directly in your browser across all devices.</p>
+                </div>
+            </div>
+        </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-links">
-            <a href="https://github.com/fikeaustin99-hue/Keynote.io">GitHub</a>
-            <a href="https://github.com/fikeaustin99-hue">Developer</a>
-            <a href="mailto:fikeaustin99@gmail.com">Contact</a>
-        </div>
-        <p>&copy; 2024 Keynote.io. All rights reserved. Made with 🎹 by Austin Fike.</p>
-    </footer>
+        <!-- Game Preview Section -->
+        <section id="game" class="game-preview">
+            <div class="preview-container">
+                <div class="preview-content">
+                    <h2>How to <span>Master</span></h2>
+                    <p>
+                        Keynote.io is simple to learn but challenging to master. Here's everything you need to know 
+                        to start your journey to musical domination.
+                    </p>
+                    <div class="preview-features">
+                        <div class="preview-feature">
+                            <div class="preview-feature-icon">1️⃣</div>
+                            <p><strong>Name Your Territory:</strong> Enter a name for your starting land—this is your identity.</p>
+                        </div>
+                        <div class="preview-feature">
+                            <div class="preview-feature-icon">2️⃣</div>
+                            <p><strong>Pick Your Song:</strong> Choose from multiple musical tracks and instruments to customize your experience.</p>
+                        </div>
+                        <div class="preview-feature">
+                            <div class="preview-feature-icon">3️⃣</div>
+                            <p><strong>Play the Rhythm:</strong> Press Q, W, E, or R as notes reach the white alignment line to score hits.</p>
+                        </div>
+                        <div class="preview-feature">
+                            <div class="preview-feature-icon">4️⃣</div>
+                            <p><strong>Build Your Streak:</strong> Hit 4 notes for bonus tracks, 10 for orchestral layers, 20+ for maximum mix.</p>
+                        </div>
+                        <div class="preview-feature">
+                            <div class="preview-feature-icon">5️⃣</div>
+                            <p><strong>Expand Your Realm:</strong> Each successful performance grows your territory and increases your rank.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="preview-frame loading" id="preview">
+                    Loading preview...
+                </div>
+            </div>
+        </section>
 
-    <!-- Embedded Game (Hidden until user interaction) -->
-    <div id="game-modal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); z-index: 2000; overflow: auto;">
-        <div style="position: absolute; top: 20px; right: 20px; z-index: 2001;">
-            <button onclick="closeGame()" class="btn btn-primary">Close</button>
+        <!-- Stats Section -->
+        <section id="about" class="stats">
+            <h2 class="section-title">By The Numbers</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h4>∞</h4>
+                    <p>Unlimited Gameplay</p>
+                </div>
+                <div class="stat-item">
+                    <h4>Free</h4>
+                    <p>Always Free to Play</p>
+                </div>
+                <div class="stat-item">
+                    <h4>100%</h4>
+                    <p>Browser-Based</p>
+                </div>
+                <div class="stat-item">
+                    <h4>0ms</h4>
+                    <p>Installation Required</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section (Hidden - triggered by anchor) -->
+        <section id="play" style="padding: 80px 40px; text-align: center; background: linear-gradient(135deg, rgba(242, 193, 78, 0.08) 0%, transparent 100%); border-top: 1px solid rgba(242, 193, 78, 0.2);">
+            <h2 class="section-title">Ready to Claim Your Territory?</h2>
+            <p class="section-subtitle">Start your musical journey now. No account required.</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary btn-play" onclick="launchGame()">▶ Launch Game</button>
+                <a href="https://github.com/fikeaustin99-hue/Keynote.io" class="btn btn-play">View Repository</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-links">
+                <a href="https://github.com/fikeaustin99-hue/Keynote.io">GitHub Repository</a>
+                <a href="https://github.com/fikeaustin99-hue">Developer Profile</a>
+                <a href="mailto:fikeaustin99@gmail.com">Contact</a>
+            </div>
+            <p>&copy; 2024 Keynote.io. Crafted with 🎹 by Austin Fike. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Embedded Game Modal -->
+    <div id="game-modal">
+        <div class="modal-close">
+            <button class="btn btn-secondary" onclick="closeGame()">✕ Close</button>
         </div>
-        <div style="width: 100%; height: 100vh; min-height: 100vh;">
-            <iframe id="game-iframe" src="keynote.io.html" style="width: 100%; height: 100%; border: none; background: white;"></iframe>
+        <div class="game-container">
+            <iframe id="game-iframe" src="keynote.io.html"></iframe>
         </div>
     </div>
 
@@ -685,14 +1007,14 @@
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.style.border = 'none';
-            iframe.style.borderRadius = '10px';
+            iframe.style.borderRadius = '16px';
             iframe.style.background = 'white';
             previewEl.innerHTML = '';
             previewEl.appendChild(iframe);
-        }, 500);
+        }, 800);
 
         // Game modal functions
-        function scrollToGame() {
+        function launchGame() {
             document.getElementById('game-modal').style.display = 'flex';
             document.getElementById('game-modal').style.flexDirection = 'column';
             document.getElementById('game-modal').style.justifyContent = 'center';
@@ -712,17 +1034,30 @@
             }
         });
 
-        // Smooth scroll enhancement
+        // Smooth scroll for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 const href = this.getAttribute('href');
-                if (href !== '#play') {
+                if (href !== '#play' && href !== '#') {
                     e.preventDefault();
                     const target = document.querySelector(href);
                     if (target) {
-                        target.scrollIntoView({ behavior: 'smooth' });
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                 }
+            });
+        });
+
+        // Add parallax effect on scroll
+        window.addEventListener('scroll', () => {
+            const grid = document.querySelector('.bg-grid');
+            const orbs = document.querySelectorAll('.orb');
+            const scrollY = window.scrollY;
+            
+            grid.style.backgroundPosition = `${scrollY * 0.5}px ${scrollY * 0.5}px`;
+            
+            orbs.forEach((orb, index) => {
+                orb.style.transform = `translate(${scrollY * (0.1 * (index + 1))}px, ${scrollY * (0.05 * (index + 1))}px)`;
             });
         });
     </script>
