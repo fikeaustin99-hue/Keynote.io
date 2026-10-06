@@ -254,6 +254,10 @@
       color: var(--ink);
       font-weight: 800;
     }
+    .pick-group button.locked {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
     .meter {
       display: flex;
@@ -594,6 +598,10 @@
       document.getElementById('toast').textContent = msg;
     }
 
+    function firstAvailableSongId() {
+      return songs.find(song => getOwned(song.id))?.id || songs[0].id;
+    }
+
     function buildSongChart(song) {
       const notes = [];
       const bpm = song.bpm || 110;
@@ -636,10 +644,23 @@
       songs.forEach((song) => {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.textContent = song.icon + ' ' + song.title;
+        const owned = getOwned(song.id);
+        btn.textContent = `${song.icon} ${song.title}${owned ? '' : ' • ' + song.cost + '💰'}`;
         btn.setAttribute('aria-pressed', String(song.id === state.selectedSong));
+        btn.classList.toggle('locked', !owned);
+        if (!owned) {
+          btn.title = 'Unlock in the shop';
+          btn.disabled = false;
+        }
         if (song.id === state.selectedSong) btn.style.borderColor = 'var(--land)';
         btn.addEventListener('click', () => {
+          if (!owned) {
+            state.selectedSong = song.id;
+            setupSongPicker();
+            toast(song.title + ' is locked. Open the shop to unlock it.');
+            openShop();
+            return;
+          }
           state.selectedSong = song.id;
           setupSongPicker();
           toast('Selected ' + song.title);
@@ -750,6 +771,11 @@
 
     function startSong() {
       const song = songs.find((s) => s.id === state.selectedSong) || songs[0];
+      if (!getOwned(song.id)) {
+        toast(song.title + ' is locked. Purchase it in the shop.');
+        openShop();
+        return;
+      }
       state.currentSong = song;
       state.playing = true;
       state.notStarted = false;
@@ -988,6 +1014,7 @@
     }
 
     function init() {
+      state.selectedSong = firstAvailableSongId();
       updateCreditsDisplay();
       setupSongPicker();
       setupStore();
