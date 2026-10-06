@@ -152,6 +152,7 @@
       font-size: 12.5px;
       text-align: center;
       background: rgba(255,255,255,.02);
+      cursor: pointer;
     }
     .shop-mini .mini-item b {
       display: block;
@@ -255,7 +256,7 @@
       font-weight: 800;
     }
     .pick-group button.locked {
-      opacity: 0.6;
+      opacity: 0.55;
       cursor: not-allowed;
     }
 
@@ -469,7 +470,7 @@
         <div class="shop-mini">
           <div class="mini-item"><b>Keys</b>4 lanes</div>
           <div class="mini-item"><b>Land</b>claiming</div>
-          <div class="mini-item" id="open-shop-btn"><b>Shop</b>buy credits</div>
+          <div class="mini-item" id="open-shop-btn"><b>Shop</b>buy songs</div>
         </div>
       </div>
     </aside>
@@ -527,7 +528,7 @@
   <div id="shop-modal" class="shop-modal" aria-modal="true" role="dialog" aria-label="In-game store">
     <div class="shop-content panel">
       <div class="shop-header">
-        <h2>🎵 In-game Store</h2>
+        <h2>🎵 Music Shop</h2>
         <button class="close-shop" id="close-shop">✕</button>
       </div>
 
@@ -542,18 +543,18 @@
     const defaultInventory = { 'pokemon-red': true };
 
     const songs = [
-      { id: 'pokemon-red', title: 'Pokémon Red', icon: '🔴', description: 'The legendary Kanto theme.', cost: 0, bpm: 108, tier: 'starter', chart: 'classic' },
-      { id: 'zelda', title: 'The Legend of Zelda', icon: '🗡️', description: 'A legendary overworld adventure.', cost: 500, bpm: 120, tier: 'epic', chart: 'quest' },
-      { id: 'mario', title: 'Super Mario Bros', icon: '🍄', description: 'A bright classic for momentum runs.', cost: 500, bpm: 132, tier: 'epic', chart: 'speed' },
-      { id: 'tetris', title: 'Tetris Theme', icon: '🧱', description: 'A clean, fast stack rhythm.', cost: 300, bpm: 118, tier: 'common', chart: 'stack' },
-      { id: 'sonic', title: 'Green Hill Zone', icon: '🔵', description: 'Fast and bouncy speedrun vibes.', cost: 500, bpm: 136, tier: 'epic', chart: 'speed' },
-      { id: 'castlevania', title: 'Castlevania Theme', icon: '🦇', description: 'Dark, moody, and rhythmically intense.', cost: 500, bpm: 122, tier: 'epic', chart: 'haunted' }
+      { id: 'pokemon-red', title: 'Pokémon Red', icon: '🔴', description: 'The iconic theme from Pokémon Red Version. Journey through Kanto.', cost: 0, bpm: 108 },
+      { id: 'zelda', title: 'The Legend of Zelda', icon: '🗡️', description: 'The timeless overworld theme from the original The Legend of Zelda.', cost: 500, bpm: 120 },
+      { id: 'mario', title: 'Super Mario Bros', icon: '🍄', description: 'The world\'s most recognizable video game theme.', cost: 500, bpm: 132 },
+      { id: 'tetris', title: 'Tetris Theme', icon: '🧱', description: 'Korobeiniki - the hypnotic theme that defined puzzle gaming.', cost: 300, bpm: 118 },
+      { id: 'sonic', title: 'Green Hill Zone', icon: '🔵', description: 'Sonic\'s iconic Green Hill Zone theme. Gotta go fast!', cost: 500, bpm: 136 },
+      { id: 'castlevania', title: 'Castlevania Theme', icon: '🦇', description: 'The hauntingly beautiful theme from the legendary Castlevania series.', cost: 500, bpm: 122 }
     ];
 
     const bundleOffers = [
-      { id: 'pack-100', title: 'Starter Pack', icon: '💎', cost: 100, credits: 100 },
-      { id: 'pack-300', title: 'Territory Pack', icon: '💠', cost: 250, credits: 300 },
-      { id: 'pack-800', title: 'Empire Pack', icon: '💰', cost: 600, credits: 800 }
+      { id: 'pack-100', title: 'Starter Pack', icon: '💎', credits: 100 },
+      { id: 'pack-300', title: 'Territory Pack', icon: '💠', credits: 300 },
+      { id: 'pack-800', title: 'Empire Pack', icon: '💰', credits: 800 }
     ];
 
     const state = {
@@ -572,11 +573,6 @@
       gameTime: 0,
       lastFrame: 0,
       slowUntil: 0,
-      currentLane: null,
-      lastHitAt: 0,
-      audioCtx: null,
-      totalLeadTime: 1.9,
-      songProgress: 0,
       hitCount: 0
     };
 
@@ -615,25 +611,6 @@
         notes.push({ lane, time: offset + extra, hit: false, missed: false });
       }
 
-      if (song.chart === 'speed') {
-        for (let i = 0; i < 14; i++) {
-          notes.push({ lane: i % 4, time: 5 + i * (beatSeconds * 0.56), hit: false, missed: false });
-        }
-      }
-
-      if (song.chart === 'quest') {
-        notes.push({ lane: 0, time: 1.6, hit: false, missed: false });
-        notes.push({ lane: 1, time: 2.2, hit: false, missed: false });
-        notes.push({ lane: 2, time: 2.8, hit: false, missed: false });
-        notes.push({ lane: 3, time: 3.4, hit: false, missed: false });
-      }
-
-      if (song.chart === 'haunted') {
-        for (let i = 0; i < 6; i++) {
-          notes.push({ lane: i % 4, time: 1 + i * (beatSeconds * 0.7), hit: false, missed: false });
-        }
-      }
-
       notes.sort((a, b) => a.time - b.time);
       return notes;
     }
@@ -648,15 +625,9 @@
         btn.textContent = `${song.icon} ${song.title}${owned ? '' : ' • ' + song.cost + '💰'}`;
         btn.setAttribute('aria-pressed', String(song.id === state.selectedSong));
         btn.classList.toggle('locked', !owned);
-        if (!owned) {
-          btn.title = 'Unlock in the shop';
-          btn.disabled = false;
-        }
-        if (song.id === state.selectedSong) btn.style.borderColor = 'var(--land)';
+        if (!owned) btn.title = 'Unlock in the shop';
         btn.addEventListener('click', () => {
           if (!owned) {
-            state.selectedSong = song.id;
-            setupSongPicker();
             toast(song.title + ' is locked. Open the shop to unlock it.');
             openShop();
             return;
@@ -700,10 +671,10 @@
           <h3>${bundle.title}</h3>
           <p>Add ${bundle.credits} in-game credits instantly.</p>
           <div class="meta">
-            <span>$${bundle.cost}</span>
+            <span>~${Math.round(bundle.credits * 0.25)}¢</span>
             <span>${bundle.credits} credits</span>
           </div>
-          <button data-bundle-id="${bundle.id}">Buy bundle</button>
+          <button data-bundle-id="${bundle.id}">Buy</button>
         `;
         const btn = card.querySelector('button');
         btn.addEventListener('click', () => buyCredits(bundle));
@@ -732,7 +703,6 @@
 
       if (state.credits < song.cost) {
         toast('Not enough credits. Buy more in the shop.');
-        openShop();
         return;
       }
 
@@ -752,21 +722,6 @@
       updateCreditsDisplay();
       setupStore();
       toast('Added ' + bundle.credits + ' credits.');
-    }
-
-    function createLinkableNotes() {
-      const notes = buildSongChart(songs.find((s) => s.id === state.selectedSong));
-      state.notes = notes;
-      state.hitCount = 0;
-      state.songProgress = 0;
-      state.score = 0;
-      state.streak = 0;
-      state.failMeter = 0;
-      state.level = 1;
-      state.bonus = 1;
-      state.gameTime = 0;
-      state.lastFrame = 0;
-      state.slowUntil = 0;
     }
 
     function startSong() {
@@ -865,7 +820,6 @@
 
     function triggerSlowdown() {
       state.slowUntil = performance.now() + 500;
-      toast('Miss! Tempo slowed by 10% for 0.5s');
     }
 
     function handleMissedNotes() {
