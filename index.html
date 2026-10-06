@@ -69,11 +69,59 @@
   <body>
     <div class="topbar">
       <div class="title">Keynote.io Live Preview</div>
-      <div class="badge">Sample page</div>
+      <div class="badge">GitHub Pages</div>
     </div>
 
-    <div class="frame-wrap">
-      <iframe src="keynote.io.html" title="Keynote.io preview"></iframe>
+    <div class="frame-wrap" id="container">
+      <!-- Content will be injected here -->
     </div>
+
+    <script>
+      // Fetch and inject the keynote.io.html content directly
+      fetch('keynote.io.html')
+        .then(response => response.text())
+        .then(html => {
+          // Parse the HTML to extract just the content (skip the outer html/head/body tags)
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          
+          // Get the container
+          const container = document.getElementById('container');
+          
+          // Move the main content into the container
+          if (doc.querySelector('main')) {
+            container.innerHTML = '';
+            container.style.padding = '0';
+            container.style.height = '100%';
+            container.appendChild(doc.querySelector('main'));
+          }
+          
+          // Inject styles from the original document
+          const styleTag = document.createElement('style');
+          const allStyles = Array.from(doc.querySelectorAll('style'))
+            .map(s => s.textContent)
+            .join('\n');
+          styleTag.textContent = allStyles;
+          document.head.appendChild(styleTag);
+          
+          // Inject scripts
+          const scripts = doc.querySelectorAll('script');
+          scripts.forEach(script => {
+            const newScript = document.createElement('script');
+            newScript.type = script.type;
+            newScript.textContent = script.textContent;
+            if (script.src) newScript.src = script.src;
+            document.body.appendChild(newScript);
+          });
+        })
+        .catch(err => {
+          document.getElementById('container').innerHTML = `
+            <div style="padding: 2rem; text-align: center; color: #ef4444;">
+              <h2>Unable to load Keynote.io</h2>
+              <p>${err.message}</p>
+            </div>
+          `;
+        });
+    </script>
   </body>
 </html>
